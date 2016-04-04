@@ -63,5 +63,36 @@ namespace ScriptExecutor.Test
 
             _target.ExecuteFileList(fileList, replacements);
         }
+
+        [TestMethod]
+        public void Config()
+        {
+            var c = new DeploymentConfig()
+            {
+                CdsModelDbName = "cds_model",
+                IfDataMartDbName = "MISDMS_PRD",
+                ScriptFolder = @"c:\scripts",
+                TargetSqlServerName = ".",
+                Replacements = new List<SearchReplacePair>()
+            };
+            SearchReplacePair srp1 = new SearchReplacePair()
+            {
+                ReplacementTerm = "~MISDMS_PRD~",
+                SearchTerm = "~IF_DATAMART_DB_NAME~"
+            };
+            SearchReplacePair srp2 = new SearchReplacePair()
+            {
+                ReplacementTerm = "~Test~",
+                SearchTerm = "~Search~"
+            };
+            c.Replacements.Add(srp1);
+            c.Replacements.Add(srp2);
+
+            var s = new GenericSerializer<DeploymentConfig>();
+
+            var xml = s.Serialize(c);
+
+
+        }
     }
 }

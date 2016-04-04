@@ -1,4 +1,4 @@
 ﻿Select * from
-~ReplaceMe1~.dbo.SomeTable
+SomeDB.dbo.SomeTable
 
-select * from ~ReplaceMe2~
+select * from SomeOtherTable

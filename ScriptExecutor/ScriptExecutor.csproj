@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Deployer.cs" />
+    <Compile Include="DeploymentConfig.cs" />
     <Compile Include="FileUtility.cs" />
+    <Compile Include="GenericSerializer.cs" />
     <Compile Include="IFileUtility.cs" />
     <Compile Include="SearchReplacePair.cs" />
     <Compile Include="SqlExecutor.cs" />
