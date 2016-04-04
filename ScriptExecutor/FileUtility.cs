@@ -13,7 +13,16 @@ namespace ScriptExecutor
 
         public string ReplaceTokens(string text, IList<SearchReplacePair> replacements)
         {
-            throw new NotImplementedException();
+            if (replacements == null)
+            {
+                return text;
+            }
+            string currentText = text;
+            foreach (var replacement in replacements)
+            {
+                currentText = currentText.Replace(replacement.SearchTerm, replacement.ReplacementTerm);
+            }
+            return currentText;
         }
     }
 }
