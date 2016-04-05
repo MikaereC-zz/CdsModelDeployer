@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace ScriptExecutor
 {
@@ -30,8 +33,9 @@ namespace ScriptExecutor
             try
             {
                 _exception = null;
-                SqlCommand command = new SqlCommand(sqlCommandText, _connection);
-                command.ExecuteNonQuery();
+                
+                Server server = new Server(new ServerConnection(_connection));
+                server.ConnectionContext.ExecuteNonQuery(sqlCommandText);
                 return true;
             }
             catch (Exception ex)

@@ -75,6 +75,7 @@ namespace CdsModelDeployer
         {
             try
             {
+                bool isValid = true;
                 var sb = new StringBuilder();
                 string dbCheckDBSql = "select DB_ID('{0}')";
                 //Validate server, credentials
@@ -84,18 +85,21 @@ namespace CdsModelDeployer
 
                 if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.CdsModelDbName)) == string.Empty)
                 {
+                    isValid = false;
                     sb.AppendLine("CDS Model Database: " + _config.CdsModelDbName + " is not valid.");
                 }
 
                 //Validate IF Datamart Database 
                 if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.IfDataMartDbName)) == string.Empty)
                 {
+                    isValid = false;
                     sb.AppendLine("IF Datamart Database: " + _config.IfDataMartDbName + " is not valid.");
                 }
 
                 //Validate Script Folder
                 if (!Directory.Exists(_config.ScriptFolder))
                 {
+                    isValid = false;
                     sb.AppendLine("Script Folder: " + _config.ScriptFolder + " is not valid.");
                 }
                 else
@@ -111,12 +115,13 @@ namespace CdsModelDeployer
                     {
                         if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, replacement.ReplacementTerm)) == string.Empty)
                         {
+                            isValid = false;
                             sb.AppendLine("Replacement Database: " + replacement.ReplacementTerm + " is not valid.");
                         }
                     }
                 }
                 
-                if (sb.ToString() == string.Empty)
+                if (isValid)
                 {
                     //All is well
                     sb.AppendLine("Deployment configuration settings are valid.");
