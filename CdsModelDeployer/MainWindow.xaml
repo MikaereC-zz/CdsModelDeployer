@@ -46,7 +46,16 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Execution">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition Width="170*"/>
+                    </Grid.ColumnDefinitions>
+                    <RichTextBox x:Name="richTextBoxResults" HorizontalAlignment="Left" Height="416" Margin="10,34,0,0" VerticalAlignment="Top" Width="696" Grid.ColumnSpan="2">
+                        <FlowDocument/>
+                    </RichTextBox>
+                    <Button x:Name="buttonExecute" Content="Execute Scripts" HorizontalAlignment="Left" Height="29" Margin="10,0,0,0" VerticalAlignment="Top" Width="105" Grid.ColumnSpan="2" Click="buttonExecute_Click"/>
+                </Grid>
             </TabItem>
         </TabControl>
 

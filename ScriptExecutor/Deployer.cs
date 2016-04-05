@@ -16,15 +16,24 @@ namespace ScriptExecutor
             _fileUtility = fileUtility;
         }
 
-        public void ExecuteFileList(IList<string> sqlScriptFiles, 
+        public StringBuilder ExecuteFileList(IList<string> sqlScriptFiles, 
             IList<SearchReplacePair> replacements)
         {
+            var sb = new StringBuilder();
             foreach (string file in sqlScriptFiles)
             {
+                sb.AppendLine("**********Start of File: " + file);
                 var sql = _fileUtility.GetFileContents(file);
                 var updatedSql = _fileUtility.ReplaceTokens(sql, replacements);
+                if (sql != updatedSql)
+                {
+                    sb.AppendLine("**NB: Script was updated !**");
+                }
+                sb.AppendLine(updatedSql);
+                sb.AppendLine("**********End of File: " + file);
                 _sqlExecutor.ExecuteNonQuery(updatedSql);
             }
+            return sb;
         }
     }
 }

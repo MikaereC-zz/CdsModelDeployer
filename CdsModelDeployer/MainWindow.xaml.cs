@@ -98,6 +98,11 @@ namespace CdsModelDeployer
                 {
                     sb.AppendLine("Script Folder: " + _config.ScriptFolder + " is not valid.");
                 }
+                else
+                {
+                    int count = this.GetSqlFiles().Count;
+                    sb.AppendLine("Script Folder has " + count.ToString() + " file(s).");
+                }
                 //validate database replacements
                 foreach (var replacement in _config.Replacements)
                 {
@@ -125,6 +130,11 @@ namespace CdsModelDeployer
             }
         }
 
+        private List<string> GetSqlFiles()
+        {
+           return  Directory.GetFiles(_config.ScriptFolder, "*.sql").ToList();
+        }
+
         private string ConnectionString
         {
             get
@@ -140,6 +150,27 @@ namespace CdsModelDeployer
                     string formatIntegratedSecurity = "Server={0};Database={1};Trusted_Connection=True;";
                     return string.Format(formatIntegratedSecurity, _config.TargetSqlServerName, _config.CdsModelDbName);
                 }
+            }
+        }
+
+        private void buttonExecute_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Clear the rich text box
+                TextRange txt = new TextRange(richTextBoxResults.Document.ContentStart, richTextBoxResults.Document.ContentEnd);
+                txt.Text = "";
+                //Setup the deployer
+                var sqlExec = new SqlExecutor(this.ConnectionString);
+                var fileUtility = new FileUtility();
+                var deployer = new Deployer(sqlExec, fileUtility);
+                //Execute the scripts, a stringbuilder is returned that contains the log
+                var sb = deployer.ExecuteFileList(this.GetSqlFiles(), _config.Replacements);
+                txt.Text = sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                richTextBoxResults.AppendText(ex.Message);
             }
         }
     }
