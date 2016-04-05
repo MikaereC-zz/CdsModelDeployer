@@ -57,9 +57,14 @@ namespace CdsModelDeployer
             configItems.Add(new ConfigItem() { Name = "IF Datamart DB Name:", Value = _config.IfDataMartDbName });
             foreach (var replacement in _config.Replacements)
             {
+                string db = string.Empty;
+                if (replacement.IsDatabaseName)
+                {
+                    db = " [DB]";
+                }
                 configItems.Add(new ConfigItem()
                 {
-                    Name = "Replacement:",
+                    Name = "Replacement" + db +":",
                     Value = string.Format("{0}=>{1}", replacement.SearchTerm, replacement.ReplacementTerm)
                 });
             }
@@ -77,13 +82,13 @@ namespace CdsModelDeployer
 
                 //Validate CDS Model database
 
-                if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.CdsModelDbName)) == null)
+                if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.CdsModelDbName)) == string.Empty)
                 {
                     sb.AppendLine("CDS Model Database: " + _config.CdsModelDbName + " is not valid.");
                 }
 
                 //Validate IF Datamart Database 
-                if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.IfDataMartDbName)) == null)
+                if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.IfDataMartDbName)) == string.Empty)
                 {
                     sb.AppendLine("IF Datamart Database: " + _config.IfDataMartDbName + " is not valid.");
                 }
@@ -91,7 +96,7 @@ namespace CdsModelDeployer
                 //Validate Script Folder
                 if (!Directory.Exists(_config.ScriptFolder))
                 {
-                    sb.AppendLine("Script Folder: " + _config.IfDataMartDbName + " is not valid.");
+                    sb.AppendLine("Script Folder: " + _config.ScriptFolder + " is not valid.");
                 }
                 //validate database replacements
                 foreach (var replacement in _config.Replacements)
@@ -99,7 +104,7 @@ namespace CdsModelDeployer
                     //Could use linq but let's keep things simple
                     if (replacement.IsDatabaseName)
                     {
-                        if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, replacement.ReplacementTerm)) == null)
+                        if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, replacement.ReplacementTerm)) == string.Empty)
                         {
                             sb.AppendLine("Replacement Database: " + replacement.ReplacementTerm + " is not valid.");
                         }
@@ -124,9 +129,17 @@ namespace CdsModelDeployer
         {
             get
             {
-                string format = "Server={0};Database={1};User Id={2};Password = {3}; ";
-                return string.Format(format, _config.TargetSqlServerName, _config.CdsModelDbName,
-                    textBoxUserName.Text, passwordBox.Password);
+                if (checkBoxSqlServerSecurity.IsChecked.HasValue && checkBoxSqlServerSecurity.IsChecked.Value)
+                {
+                    string formatSqlSecurity = "Server={0};Database={1};User Id={2};Password = {3}; ";
+                    return string.Format(formatSqlSecurity, _config.TargetSqlServerName, _config.CdsModelDbName,
+                        textBoxUserName.Text, passwordBox.Password);
+                }
+                else
+                {
+                    string formatIntegratedSecurity = "Server={0};Database={1};Trusted_Connection=True;";
+                    return string.Format(formatIntegratedSecurity, _config.TargetSqlServerName, _config.CdsModelDbName);
+                }
             }
         }
     }
