@@ -18,7 +18,15 @@ namespace ScriptExecutor
                 s.Serialize(writer, source);
                 return writer.ToString();
             }
-           
+        }
+
+        public T Deserialize(string xml)
+        {
+            using (StringReader reader = new StringReader(xml))
+            {
+                var s = new XmlSerializer(typeof(T));
+                return (T)s.Deserialize(reader);
+            }
         }
     }
 }
