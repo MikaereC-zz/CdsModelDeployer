@@ -36,6 +36,8 @@ namespace ScriptExecutor
                 
                 Server server = new Server(new ServerConnection(_connection));
                 server.ConnectionContext.ExecuteNonQuery(sqlCommandText);
+                
+
                 return true;
             }
             catch (Exception ex)

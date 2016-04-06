@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace ScriptExecutor
 {
@@ -20,7 +21,8 @@ namespace ScriptExecutor
             string currentText = text;
             foreach (var replacement in replacements)
             {
-                currentText = currentText.Replace(replacement.SearchTerm, replacement.ReplacementTerm);
+                //currentText = currentText.Replace(replacement.SearchTerm, replacement.ReplacementTerm );
+                currentText = Regex.Replace(currentText, replacement.SearchTerm, replacement.ReplacementTerm, RegexOptions.IgnoreCase);
             }
             return currentText;
         }

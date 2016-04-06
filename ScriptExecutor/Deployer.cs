@@ -31,9 +31,21 @@ namespace ScriptExecutor
                 }
                 sb.AppendLine(updatedSql);
                 sb.AppendLine("**********End of File: " + file);
-                _sqlExecutor.ExecuteNonQuery(updatedSql);
+                bool ok = _sqlExecutor.ExecuteNonQuery(updatedSql);
+                if (!ok)
+                {
+                    sb.AppendLine("!!!! EXCEPTION  !!!!");
+                    sb.AppendLine(_sqlExecutor.Exception.Message);
+                    if (_sqlExecutor.Exception.InnerException != null)
+                    {
+                        sb.AppendLine("!!!! INNER  !!!!");
+                        sb.AppendLine(_sqlExecutor.Exception.InnerException.Message);
+                    }
+                }
             }
             return sb;
         }
+
+        
     }
 }
