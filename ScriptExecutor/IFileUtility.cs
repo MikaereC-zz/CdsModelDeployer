@@ -11,5 +11,7 @@ namespace ScriptExecutor
         string GetFileContents(string filePath);
 
         string ReplaceTokens(string text, IList<SearchReplacePair> replacements);
+
+        void ArchiveFile(string archiveFolder, string filePath);
     }
 }

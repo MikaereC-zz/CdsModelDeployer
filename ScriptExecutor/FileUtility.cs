@@ -7,6 +7,12 @@ namespace ScriptExecutor
 {
     public class FileUtility : IFileUtility
     {
+        public void ArchiveFile(string archiveFolder, string filePath)
+        {
+            string archivePath = Path.Combine(archiveFolder, Path.GetFileName(filePath));
+            File.Move(filePath, archivePath);
+        }
+
         public string GetFileContents(string filePath)
         {
             return File.ReadAllText(filePath);
@@ -26,5 +32,7 @@ namespace ScriptExecutor
             }
             return currentText;
         }
+
+
     }
 }

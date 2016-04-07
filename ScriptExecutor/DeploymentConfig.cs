@@ -10,9 +10,9 @@ namespace ScriptExecutor
     public class DeploymentConfig
     {
         public string TargetSqlServerName { get; set; }
-        public string IfDataMartDbName { get; set; }
         public string CdsModelDbName { get; set; }
         public string ScriptFolder { get; set; }
+        public string ScriptArchiveFolder { get; set; }
         public List<SearchReplacePair> Replacements { get; set; }
     }
 }

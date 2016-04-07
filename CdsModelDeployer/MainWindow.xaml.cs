@@ -52,9 +52,9 @@ namespace CdsModelDeployer
         {
             List<ConfigItem> configItems = new List<ConfigItem>();
             configItems.Add(new ConfigItem() { Name = "Script Folder:", Value = _config.ScriptFolder });
+            configItems.Add(new ConfigItem() { Name = "Script Archive Folder:", Value = _config.ScriptFolder });
             configItems.Add(new ConfigItem() { Name = "Target SQL Server:", Value = _config.TargetSqlServerName });
             configItems.Add(new ConfigItem() { Name = "CDS Model DB Name:", Value = _config.CdsModelDbName });
-            configItems.Add(new ConfigItem() { Name = "IF Datamart DB Name:", Value = _config.IfDataMartDbName });
             foreach (var replacement in _config.Replacements)
             {
                 string db = string.Empty;
@@ -89,13 +89,6 @@ namespace CdsModelDeployer
                     sb.AppendLine("CDS Model Database: " + _config.CdsModelDbName + " is not valid.");
                 }
 
-                //Validate IF Datamart Database 
-                if (sqlExec.ExecuteScalar(string.Format(dbCheckDBSql, _config.IfDataMartDbName)) == string.Empty)
-                {
-                    isValid = false;
-                    sb.AppendLine("IF Datamart Database: " + _config.IfDataMartDbName + " is not valid.");
-                }
-
                 //Validate Script Folder
                 if (!Directory.Exists(_config.ScriptFolder))
                 {
@@ -107,6 +100,13 @@ namespace CdsModelDeployer
                     int count = this.GetSqlFiles().Count;
                     sb.AppendLine("Script Folder has " + count.ToString() + " file(s).");
                 }
+                //Validate Script Archive Folder
+                if (!Directory.Exists(_config.ScriptArchiveFolder))
+                {
+                    isValid = false;
+                    sb.AppendLine("Script Archive Folder: " + _config.ScriptArchiveFolder + " is not valid.");
+                }
+
                 //validate database replacements
                 foreach (var replacement in _config.Replacements)
                 {
@@ -170,13 +170,19 @@ namespace CdsModelDeployer
                 var fileUtility = new FileUtility();
                 var deployer = new Deployer(sqlExec, fileUtility);
                 //Execute the scripts, a stringbuilder is returned that contains the log
-                var sb = deployer.ExecuteFileList(this.GetSqlFiles(), _config.Replacements);
+                var sb = deployer.ExecuteFileList(this.GetSqlFiles(), _config.Replacements, 
+                    _config.ScriptArchiveFolder, checkBoxStopOnException.IsChecked.Value);
                 txt.Text = sb.ToString();
             }
             catch (Exception ex)
             {
                 richTextBoxResults.AppendText(ex.Message);
             }
+        }
+
+        private void CreateArchiveFolder()
+        {
+            Directory.CreateDirectory(_config.ScriptFolder + @"\ExecutedScripts");
         }
     }
 }

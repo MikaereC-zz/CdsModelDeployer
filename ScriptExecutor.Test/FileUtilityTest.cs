@@ -81,7 +81,6 @@ namespace ScriptExecutor.Test
             string expected = "select * from ~ReplaceMe1~ union select * from ~ReplaceMe2~";
             var target = new FileUtility();
             var actual = target.ReplaceTokens(expected, list);
-
             Assert.AreEqual(expected, actual);
 
         }

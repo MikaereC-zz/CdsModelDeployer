@@ -54,7 +54,8 @@
                     <RichTextBox x:Name="richTextBoxResults" HorizontalAlignment="Left" Height="416" Margin="10,34,0,0" VerticalAlignment="Top" Width="696" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
                         <FlowDocument/>
                     </RichTextBox>
-                    <Button x:Name="buttonExecute" Content="Execute Scripts" HorizontalAlignment="Left" Height="29" Margin="10,0,0,0" VerticalAlignment="Top" Width="105" Grid.ColumnSpan="2" Click="buttonExecute_Click"/>
+                    <Button x:Name="buttonExecute" Content="Execute Scripts" HorizontalAlignment="Left" Height="29" Margin="10,0,0,0" VerticalAlignment="Top" Width="116" Grid.ColumnSpan="2" Click="buttonExecute_Click"/>
+                    <CheckBox x:Name="checkBoxStopOnException" Content="Stop on Exception ?" Grid.Column="1" HorizontalAlignment="Left" Margin="129,10,0,0" VerticalAlignment="Top" Width="158" IsChecked="True"/>
                 </Grid>
             </TabItem>
         </TabControl>

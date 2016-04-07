@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace ScriptExecutor
         }
 
         public StringBuilder ExecuteFileList(IList<string> sqlScriptFiles, 
-            IList<SearchReplacePair> replacements)
+            IList<SearchReplacePair> replacements, string archiveFolder, bool stopOnException)
         {
             var sb = new StringBuilder();
             foreach (string file in sqlScriptFiles)
@@ -41,11 +42,19 @@ namespace ScriptExecutor
                         sb.AppendLine("!!!! INNER  !!!!");
                         sb.AppendLine(_sqlExecutor.Exception.InnerException.Message);
                     }
+                    if (stopOnException)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    //Archive the script
+                    _fileUtility.ArchiveFile(archiveFolder, file);
                 }
             }
             return sb;
         }
-
-        
+               
     }
 }

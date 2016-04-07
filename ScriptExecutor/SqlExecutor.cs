@@ -24,7 +24,7 @@ namespace ScriptExecutor
         {
             get
             {
-                throw new NotImplementedException();
+                return _exception;
             }
         }
 
